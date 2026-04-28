@@ -12,30 +12,37 @@
 
 <div id="tela-login">
   <div class="login-box">
-    <div class="login-logo">
-      <span class="em">🍕</span>
-      <h1>Metal Tech</h1>
-      <p>Sistema de Gestão · Faça login para continuar</p>
+    <img src="./images/image 21 (2).png" class="banner-topo" alt="Banner Metal">
+
+    <div class="login-content">
+      <div class="login-logo">
+        <img src="./images/login-circle.png" alt="Logo">
+        <h1>Metal Tech</h1>
+        <p>Sistema de Gestão · Faça login para continuar</p>
+      </div>
+
+      <div class="login-erro" id="login-erro">
+        Preencha e-mail e senha.
+      </div>
+
+      <div class="fg">
+        <label>E-mail</label>
+        <input id="l-email" type="email" placeholder="admin@metaltech.com">
+      </div>
+
+      <div class="fg">
+        <label>Senha</label>
+        <input id="l-senha" type="password" placeholder="••••••">
+      </div>
+
+      <button class="btn btn-enter" id="btn-login" onclick="fazerLogin()">
+        Fazer Login
+      </button>
+
+      <p class="seed-text">
+        Rode <strong>node seed.js</strong> para criar o admin inicial
+      </p>
     </div>
-    <div class="login-erro" id="login-erro"></div>
-    <div class="fg">
-      <label>E-mail</label>
-      <input id="l-email" type="email" placeholder="admin@metaltech.com"
-        onkeydown="if(event.key==='Enter') fazerLogin()">
-    </div>
-    <div class="fg">
-      <label>Senha</label>
-      <input id="l-senha" type="password" placeholder="••••••"
-        onkeydown="if(event.key==='Enter') fazerLogin()">
-    </div>
-    <button class="btn btn-red" id="btn-login"
-      style="width:100%;padding:10px;margin-top:4px"
-      onclick="fazerLogin()">
-      Entrar
-    </button>
-    <p style="text-align:center;font-size:.69rem;color:var(--muted);margin-top:14px">
-      Rode <strong style="color:var(--text)">node seed.js</strong> para criar o admin inicial
-    </p>
   </div>
 </div>
 
