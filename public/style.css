@@ -16,6 +16,7 @@
 /* cores para o site Metal Tech */
 /* pagina de login */
   --yellowlogin: #F0D860;
+  --yellowlogin2: #e8cd20;
   --background1: #727272;
   --background2: #636363;
   --background3: #1A1A1A;
@@ -36,7 +37,7 @@ body {
   background: var(--bg);             /* fundo geral */
   color: var(--text);                /* cor do texto */
   min-height: 100vh;                 /* altura mínima tela inteira */
-  font-size: 14px;                   /* tamanho base do texto */
+  font-size: 14px;   
 }
 
 
@@ -51,20 +52,72 @@ body {
 
 
 .login-box {
-  background: var(--surf);           /* fundo do card */
-  border: 1px solid var(--border);   /* borda sutil */
-  border-radius: 16px;               /* cantos arredondados */
-  padding: 42px 38px;                /* espaçamento interno */
-  width: 100%;                       /* largura responsiva */
-  max-width: 390px;                  /* largura máxima */
-  box-shadow: 0 20px 60px rgba(0,0,0,.55);
-                                      /* sombra profunda */
+  background-image: linear-gradient(to bottom, #444242, #000000);
+  
+  border: 1px solid var(--border);
+  width: 100%;
+  max-width: 500px; /* Reduzi um pouco para ficar mais elegante como no Figma */
+  padding: 0; /* Remove padding total para o banner encostar */
+  overflow: hidden;
+  border-radius: 8px; /* Opcional: arredondar os cantos do card */
+  
+  /* Sombra: usei preto com opacidade alta para aparecer no fundo escuro */
+  box-shadow: 0 10px 40px rgba(43, 43, 42, 0.959); 
 }
 
+/* Imagem Amarela */
+.banner-topo {
+  width: 100%;
+  display: block;
+}
+
+/* O "segredo": aplica o padding só no que importa */
+.login-content {
+  padding: 30px 40px 40px 40px; /* (Cima, Direita, Baixo, Esquerda) */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ajuste do Botão para não ficar colado nas bordas */
+.btn-enter {
+ /* ... seus estilos de cor existentes ... */
+  /* Remove o style="width:100%" inline do HTML! */
+  width: auto; /* Deixa o texto definir o tamanho */
+  min-width: 180px; /* Define um tamanho mínimo proporcional ao Figma */
+  max-width: 420px; /* Garante que não ultrapasse a largura dos inputs */
+  
+  padding: 10px 10px; /* Diminui padding vertical */
+  margin: 15px auto 10px auto; /* Centraliza e dá espaço */
+  
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem; /* Fonte ligeiramente menor */
+}
+
+/* Texto do rodapé */
+.seed-text {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 20px;
+}
+
+.login-logo, .fg, .btn-enter, .login-box p {
+  padding-left: 38px;
+  padding-right: 38px;
+}
 
 .login-logo {
   text-align: center;                /* centraliza conteúdo */
   margin-bottom: 30px;               /* espaço inferior */
+}
+.login-logo img {
+  width: 145px;
+  padding-top: 8px;
 }
 
 
@@ -80,7 +133,7 @@ body {
   font-size: 1.55rem;                /* tamanho do título */
   font-weight: 700;                  /* negrito */
   letter-spacing: -0.3px;            /* ajuste fino do espaçamento */
-  color: var(--red);                 /* cor destaque */
+  color: var(--background1);                 /* cor destaque */
 }
 
 
@@ -92,15 +145,19 @@ body {
 
 
 .login-erro {
-  background: rgba(232,55,42,.13);   /* fundo vermelho transparente */
-  border: 1px solid rgba(232,55,42,.3);
-                                      /* borda de alerta */
-  color: #ff7e70;                    /* cor do texto de erro */
-  padding: 9px 13px;                 /* espaçamento interno */
-  border-radius: 8px;                /* cantos arredondados */
-  font-size: 0.8rem;                 /* texto menor */
-  margin-bottom: 14px;               /* espaço inferior */
-  display: none;                     /* escondido por padrão */
+  display: none; 
+  background: rgba(232, 55, 42, .13);
+  border: 1px solid rgba(232, 55, 42, .3);
+  color: #ff7e70;
+  padding: 9px 13px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+
+  width: auto;             /* Deixa a largura flexível */
+  margin-left: 38px;       /* Alinha com o início do e-mail/senha */
+  margin-right: 38px;      /* Alinha com o fim do e-mail/senha */
+  text-align: center;      /* Centraliza o texto dentro da caixa */  
 }
 
 
@@ -132,12 +189,6 @@ body.logado #app {
   top: 0; left: 0; bottom: 0;        /* ocupa toda lateral esquerda */
   z-index: 50;                       /* sobre outros elementos */
 }
-
-
-
-
-
-
 
 
 .sb-logo {
@@ -505,8 +556,14 @@ td {
 
 
 /* variações de botão */
-.btn-red    { background: var(--red);   color: #fff; }
-.btn-red:hover { background: var(--red-dk); }
+.btn-enter    { 
+  background: rgb(37, 36, 36);  
+  color: #B1B1B1;
+  justify-content: center;
+}
+
+
+.btn-enter:hover { background: var(--yellowlogin2); color:#222121 }
 
 
 .btn-blue   { background: var(--blue);  color: #fff; }
@@ -577,7 +634,7 @@ input, select, textarea {
 
 input:focus, select:focus, textarea:focus {
   outline: none;                     /* remove outline padrão */
-  border-color: var(--red);          /* destaque ao focar */
+  border-color: var(--yellowlogin);          /* destaque ao focar (borda das areas email e senha na tela de login*/ 
 }
 
 
