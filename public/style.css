@@ -4,7 +4,6 @@
   --surf2:   #212121;        /* variação de superfície */
   --border:  #2a2a2a;        /* cor padrão de bordas */
   --red:     #e8372a;        /* cor primária (destaque/vermelho) */
-  --red-dk:  #c02d22;        /* versão mais escura do vermelho */
   --gold:    #f5c842;        /* cor dourada (destaques especiais) */
   --green:   #29c76f;        /* sucesso/positivo */
   --blue:    #3b82f6;        /* informativo/links */
@@ -22,6 +21,10 @@
   --background3: #1A1A1A;
   --background4: #000000; /*60% de opacidade*/
   --background5: #EFF3F6;
+  --barralateral: #D7C377;
+   --fundo: #E9E8D3;
+   --bloco: #f3d657;
+   --bloco2: #383838;
 }
 
 
@@ -34,7 +37,7 @@
 
 body {
   font-family: 'Inter', sans-serif;  /* fonte principal */
-  background: var(--bg);             /* fundo geral */
+  background: var(--fundo);             /* fundo geral */
   color: var(--text);                /* cor do texto */
   min-height: 100vh;                 /* altura mínima tela inteira */
   font-size: 14px;   
@@ -116,8 +119,8 @@ body {
   margin-bottom: 30px;               /* espaço inferior */
 }
 .login-logo img {
-  width: 145px;
-  padding-top: 8px;
+  width: 130px;
+  padding-top: 1px;
 }
 
 
@@ -134,6 +137,7 @@ body {
   font-weight: 700;                  /* negrito */
   letter-spacing: -0.3px;            /* ajuste fino do espaçamento */
   color: var(--background1);                 /* cor destaque */
+  padding-top: 9px;
 }
 
 
@@ -180,7 +184,7 @@ body.logado #app {
 #sidebar {
   width: 220px;                      /* largura fixa */
   min-height: 100vh;                 /* altura total */
-  background: var(--surf);           /* fundo lateral */
+  background: var(--barralateral);           /* fundo lateral */
   border-right: 1px solid var(--border);
                                       /* linha divisória */
   display: flex;                     /* layout flex */
@@ -202,7 +206,7 @@ body.logado #app {
   font-size: 1rem;                   /* tamanho do texto */
   font-weight: 700;                  /* negrito */
   letter-spacing: -0.2px;            /* ajuste de espaçamento */
-  color: var(--red);                 /* cor destaque */
+  color: var(--background4);                 /* cor destaque */
 }
 
 
@@ -212,13 +216,13 @@ body.logado #app {
   gap: 6px;                          /* espaço entre itens */
   margin-top: 6px;                   /* espaço superior */
   font-size: 0.72rem;                /* texto pequeno */
-  color: var(--muted);               /* cor secundária */
+  color: var(--background4);               /* cor secundária */
 }
 
 
 .sb-user .tag {
-  background: rgba(232,55,42,.18);   /* fundo vermelho suave */
-  color: var(--red);                 /* cor do texto */
+  background: rgba(48, 39, 38, 0.18);   /* fundo vermelho suave */
+  color: var(--background4);                 /* cor do texto */
   padding: 1px 7px;                  /* espaçamento interno */
   border-radius: 20px;               /* formato arredondado */
   font-size: 0.67rem;                /* texto menor */
@@ -239,7 +243,7 @@ body.logado #app {
   font-size: 0.63rem;                /* texto pequeno */
   text-transform: uppercase;         /* tudo maiúsculo */
   letter-spacing: 0.9px;             /* espaçamento entre letras */
-  color: var(--muted);               /* cor apagada */
+  color: var(--background4);               /* cor apagada */
   padding: 10px 10px 4px;            /* espaçamento interno */
 }
 
@@ -253,7 +257,7 @@ body.logado #app {
   cursor: pointer;                   /* cursor de clique */
   font-size: 0.84rem;                /* tamanho do texto */
   font-weight: 500;                  /* médio */
-  color: var(--muted);               /* cor padrão */
+  color: var(--bloco2);               /* cor padrão */
   transition: all .15s;              /* animação suave */
   border: none;                      /* remove borda */
   background: none;                  /* sem fundo */
@@ -270,8 +274,8 @@ body.logado #app {
 
 
 .nav-btn.ativo {
-  background: rgba(232,55,42,.11);   /* fundo quando ativo */
-  color: var(--red);                 /* cor destaque */
+  background: rgba(109, 106, 106, 0.466);   /* fundo quando ativo */
+  color: var(--bloco);                 /* cor destaque */
 }
 
 
@@ -311,8 +315,8 @@ body.logado #app {
 
 
 .btn-logout:hover {
-  border-color: var(--red);          /* borda vermelha ao hover */
-  color: var(--red);                 /* texto vermelho */
+  border-color: var(--background4);          /* borda vermelha ao hover */
+  color: var(--bg);                 /* texto vermelho */
 }
 
 
@@ -339,12 +343,13 @@ body.logado #app {
   font-size: 1.45rem;                /* tamanho do título */
   font-weight: 700;                  /* negrito */
   letter-spacing: -0.3px;            /* ajuste fino */
+  color: var(--background4);
 }
 
 
 .pg-header p {
   font-size: 0.78rem;                /* texto pequeno */
-  color: var(--muted);               /* cor secundária */
+  color: var(--border);               /* cor secundária */
   margin-top: 3px;                   /* espaço superior */
 }
 
@@ -374,7 +379,7 @@ body.logado #app {
 
 
 .stat {
-  background: var(--surf);           /* fundo do card */
+  background: var(--bloco);           /* fundo do card */
   border: 1px solid var(--border);   /* borda */
   border-radius: var(--r);           /* cantos arredondados */
   padding: 15px;                     /* espaçamento interno */
@@ -391,16 +396,16 @@ body.logado #app {
 }
 
 
-.stat.cr::before { background: var(--red); }     /* cor vermelho */
-.stat.co::before { background: var(--orange); }  /* cor laranja */
-.stat.cg::before { background: var(--green); }   /* cor verde */
-.stat.cb::before { background: var(--blue); }    /* cor azul */
-.stat.cp::before { background: var(--purple); }  /* cor roxo */
+.stat.cr::before { background: var(--background4); }     /* cor vermelho */
+.stat.co::before { background: var(--background4); }  /* cor laranja */
+.stat.cg::before { background: var(--background4); }   /* cor verde */
+.stat.cb::before { background: var(--background4); }    /* cor azul */
+.stat.cp::before { background: var(--background4); }  /* cor roxo */
 
 
 .stat .lbl {
   font-size: 0.68rem;                /* label pequeno */
-  color: var(--muted);               /* cor secundária */
+  color: var(--bg);               /* cor secundária */
   text-transform: uppercase;         /* maiúsculo */
   letter-spacing: .4px;              /* espaçamento */
 }
@@ -412,12 +417,13 @@ body.logado #app {
   margin: 4px 0 1px;                 /* espaçamento */
   line-height: 1;                    /* altura da linha */
   letter-spacing: -0.5px;            /* ajuste fino */
+  color: var(--border);
 }
 
 
 .stat .sub {
   font-size: 0.68rem;                /* texto pequeno */
-  color: var(--muted);               /* cor secundária */
+  color: var(--bg);               /* cor secundária */
 }
 
 

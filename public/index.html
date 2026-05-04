@@ -12,7 +12,7 @@
 
 <div id="tela-login">
   <div class="login-box">
-    <img src="./images/image 21 (2).png" class="banner-topo" alt="Banner Metal">
+    <img src="./images/header-login.png" class="banner-topo" alt="Banner Metal">
 
     <div class="login-content">
       <div class="login-logo">
@@ -49,7 +49,8 @@
 <div id="app">
   <aside id="sidebar">
     <div class="sb-logo">
-      <h1>🍕 Pizzaria</h1>
+      <h1>Factory
+Track</h1>
       <div class="sb-user">
         <span class="tag" id="sb-perfil">—</span>
         <span id="sb-nome">—</span>
@@ -57,15 +58,15 @@
     </div>
     <nav class="sb-nav">
       <div class="sb-group">Geral</div>
-      <button class="nav-btn ativo" onclick="ir('dashboard',this)">
-        <span class="ic">📊</span><span>Dashboard</span>
+      <button class="nav-btn ativo" onclick="ir('Painel',this)">
+        <span class="ic">📊</span><span>Painel</span>
       </button>
       <button class="nav-btn" onclick="ir('pedidos',this)">
         <span class="ic">📋</span><span>Pedidos</span>
       </button>
       <div class="sb-group">Cadastros</div>
-      <button class="nav-btn" onclick="ir('pizzas',this)">
-        <span class="ic">🍕</span><span id="nav-pizzas-label">Pizzas</span>
+      <button class="nav-btn" onclick="ir('Produtos',this)">
+        <span class="ic">🛒</span><span id="nav-Produtos-label">Produtos</span>
       </button>
       <button class="nav-btn" onclick="ir('clientes',this)">
         <span class="ic">👥</span><span>Clientes</span>
@@ -91,7 +92,7 @@
     <section id="pg-dashboard" class="secao ativa">
       <div class="pg-header">
         <div>
-          <h2>Dashboard</h2>
+          <h2>Painel</h2>
           <p id="dash-sub">Resumo do sistema</p>
         </div>
         <button class="btn btn-ghost btn-sm" onclick="carregarDashboard()">↻ Atualizar</button>
@@ -117,8 +118,8 @@
             <div class="sub">cadastrados</div>
           </div>
           <div class="stat cb">
-            <span class="ico">🍕</span>
-            <div class="lbl">Pizzas</div>
+            <span class="ico">🛒</span>
+            <div class="lbl">Produtos</div>
             <div class="val" id="s-piz">—</div>
             <div class="sub">no cardápio</div>
           </div>
