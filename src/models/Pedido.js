@@ -1,4 +1,4 @@
-// Esse código é um Model (Modelo) em JavaScript (Node.js) que gerencia as operações de um sistema de pizzaria no banco de dados SQLite. 
+// Esse código é um Model (Modelo) em JavaScript (Node.js) que gerencia as operações de um sistema do metaltech no banco de dados SQLite. 
 // Ele lida com a criação, leitura, atualização e exclusão de pedidos.
 
 // Importa as funções de conexão e comandos do banco de dados SQLite
@@ -30,9 +30,9 @@ function formatarPedido(row, itens = []) {
     // Transforma a lista de itens do banco para o formato usado no Front-end
     itens: itens.map(it => ({
       _id:           it.id,
-      pizza:         it.pizza_id,
-      nomePizza:     it.nome_pizza,
-      tamanho:       it.tamanho,
+      produto:         it.produto_id,
+      nomeProduto:     it.nome_produto,
+      medida:       it.medida,
       quantidade:    it.quantidade,
       precoUnitario: it.preco_unitario,
       subtotal:      it.subtotal,
@@ -67,7 +67,7 @@ const Pedido = {
       rows = query(`${SELECT_PEDIDO} ORDER BY p.created_at DESC`);
     }
 
-    // Para cada pedido encontrado, busca também os itens (pizzas) que pertencem a ele
+    // Para cada pedido encontrado, busca também os itens (produtos) que pertencem a ele
     return rows.map(row => {
       const itens = query('SELECT * FROM itens_pedido WHERE pedido_id = ?', [row.id]);
       return formatarPedido(row, itens);
@@ -89,29 +89,28 @@ const Pedido = {
   async create({ clienteId, itens, taxaEntrega = 0, formaPagamento, troco = 0, observacoes = '', mesa = null, origem = 'balcao', garcomId = null }) {
     await ready;
 
-    const Pizza = require('./Pizza'); // Importa o modelo de Pizza para validar preços
+    const Produto = require('./Produto'); // Importa o modelo de Produto para validar preços
     let subtotal = 0;
     const itensProcessados = [];
 
     // Loop para processar cada item do pedido, conferindo preços e calculando totais
     for (const item of itens) {
-      const pizza = await Pizza.findById(item.pizza);
-      if (!pizza) throw new Error(`Pizza ID ${item.pizza} não encontrada`);
+    const produto = await Produto.findById(item.produto);
+    if (!produto) throw new Error(`Produto ID ${item.produto} não encontrado`);
 
-      const preco   = pizza.precos[item.tamanho] || 0;
-      const subItem = preco * item.quantidade;
-      subtotal     += subItem;
+    const preco = produto.preco || 0;
+    const subItem = preco * item.quantidade;
+    subtotal += subItem;
 
-      // Guarda o item formatado para salvar depois
-      itensProcessados.push({
-        pizzaId:       pizza.id,
-        nomePizza:     pizza.nome,
-        tamanho:       item.tamanho,
-        quantidade:    item.quantidade,
-        precoUnitario: preco,
-        subtotal:      subItem,
-      });
-    }
+  itensProcessados.push({
+    produtoId: produto.id,
+    nomeProduto: produto.nome,
+    medida: item.medida || 'Unidade',
+    quantidade: item.quantidade,
+    precoUnitario: preco,
+    subtotal: subItem,
+  });
+}
 
     const total = subtotal + (taxaEntrega || 0);
     
@@ -130,13 +129,21 @@ const Pedido = {
 
     const pedidoId = infoPedido.lastInsertRowid; // Pega o ID que o banco acabou de gerar
 
-    // Insere cada item (pizza) na tabela de 'itens_pedido' vinculando ao ID do pedido acima
-    for (const it of itensProcessados) {
+    // Insere cada item (produto) na tabela de 'itens_pedido' vinculando ao ID do pedido acima
+    for (const item of itensProcessados) {
       run(`
-        INSERT INTO itens_pedido
-          (pedido_id, pizza_id, nome_pizza, tamanho, quantidade, preco_unitario, subtotal)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-      `, [pedidoId, it.pizzaId, it.nomePizza, it.tamanho, it.quantidade, it.precoUnitario, it.subtotal]);
+  INSERT INTO itens_pedido
+    (pedido_id, produto_id, nome_produto, medida, quantidade, preco_unitario, subtotal)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `, [
+    pedidoId,
+    item.produtoId,
+    item.nomeProduto,
+    item.medida,
+    item.quantidade,
+    item.precoUnitario,
+    item.subtotal
+  ]);
     }
 
     // Retorna o pedido completo já formatado

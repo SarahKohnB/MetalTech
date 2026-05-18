@@ -34,7 +34,7 @@ ready.then(() => {
 
   // Rota simples apenas para testar se a API está "viva"
   app.get('/teste', (req, res) => {
-    res.json({ mensagem: 'API da Pizzaria funcionando!', status: 'online', porta: PORT });
+    res.json({ mensagem: 'API Metal Tech funcionando!', status: 'online', porta: PORT });
   });
 
   // Rota principal: entrega o arquivo HTML do seu site para o navegador

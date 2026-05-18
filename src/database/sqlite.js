@@ -9,7 +9,7 @@ const fs        = require('fs');
 const path      = require('path');
 
 const DB_PATH = process.env.DB_PATH
-  || path.join(__dirname, '..', '..', 'pizzaria.db');
+  || path.join(__dirname, '..', '..', 'metaltech.db');
 
 // Módulo singleton — exporta { db, ready }
 // "ready" é uma Promise que resolve quando o banco estiver pronto.
@@ -61,17 +61,17 @@ const ready = (async () => {
   `);
 
   db.run(`
-    CREATE TABLE IF NOT EXISTS pizzas (
-      id           INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome         TEXT    NOT NULL,
-      descricao    TEXT    NOT NULL DEFAULT '',
-      ingredientes TEXT    NOT NULL,
-      precos       TEXT    NOT NULL DEFAULT '{"P":0,"M":0,"G":0}',
-      disponivel   INTEGER NOT NULL DEFAULT 1,
-      categoria    TEXT    NOT NULL DEFAULT 'tradicional',
-      created_at   TEXT    NOT NULL DEFAULT (datetime('now')),
-      updated_at   TEXT    NOT NULL DEFAULT (datetime('now'))
-    )
+    CREATE TABLE IF NOT EXISTS produtos (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome         TEXT    NOT NULL,
+  descricao    TEXT    NOT NULL DEFAULT '',
+  material     TEXT    NOT NULL,
+  preco        REAL    NOT NULL DEFAULT 0,
+  disponivel   INTEGER NOT NULL DEFAULT 1,
+  categoria    TEXT    NOT NULL DEFAULT 'metal',
+  created_at   TEXT    NOT NULL DEFAULT (datetime('now')),
+  updated_at   TEXT    NOT NULL DEFAULT (datetime('now'))
+)
   `);
 
   db.run(`
@@ -95,17 +95,17 @@ const ready = (async () => {
   `);
 
   db.run(`
-    CREATE TABLE IF NOT EXISTS itens_pedido (
-      id             INTEGER PRIMARY KEY AUTOINCREMENT,
-      pedido_id      INTEGER NOT NULL REFERENCES pedidos(id),
-      pizza_id       INTEGER NOT NULL REFERENCES pizzas(id),
-      nome_pizza     TEXT    NOT NULL,
-      tamanho        TEXT    NOT NULL,
-      quantidade     INTEGER NOT NULL DEFAULT 1,
-      preco_unitario REAL    NOT NULL DEFAULT 0,
-      subtotal       REAL    NOT NULL DEFAULT 0
-    )
-  `);
+  CREATE TABLE IF NOT EXISTS itens_pedido (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    pedido_id       INTEGER NOT NULL REFERENCES pedidos(id),
+    produto_id      INTEGER NOT NULL REFERENCES produtos(id),
+    nome_produto    TEXT    NOT NULL,
+    medida          TEXT    NOT NULL,
+    quantidade      INTEGER NOT NULL DEFAULT 1,
+    preco_unitario  REAL    NOT NULL DEFAULT 0,
+    subtotal        REAL    NOT NULL DEFAULT 0
+  )
+`);
 
   // Salva no disco após criar as tabelas
   salvar();
