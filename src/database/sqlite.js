@@ -67,12 +67,19 @@ const ready = (async () => {
   descricao    TEXT    NOT NULL DEFAULT '',
   material     TEXT    NOT NULL,
   preco        REAL    NOT NULL DEFAULT 0,
+  imagem       TEXT    NOT NULL DEFAULT 'images/produtos/chapa_lisa.jpg',
   disponivel   INTEGER NOT NULL DEFAULT 1,
   categoria    TEXT    NOT NULL DEFAULT 'metal',
   created_at   TEXT    NOT NULL DEFAULT (datetime('now')),
   updated_at   TEXT    NOT NULL DEFAULT (datetime('now'))
 )
+  
   `);
+  try {
+  db.run("ALTER TABLE produtos ADD COLUMN imagem TEXT NOT NULL DEFAULT 'images/produtos/chapa_lisa.jpg'");
+} catch (e) {
+  // ignora se a coluna já existir
+}
 
   db.run(`
     CREATE TABLE IF NOT EXISTS pedidos (

@@ -10,6 +10,7 @@ function formatarProduto(row) {
     descricao: row.descricao,
     material: row.material,
     preco: row.preco,
+    imagem: row.imagem,
     disponivel: row.disponivel === 1,
     categoria: row.categoria,
     createdAt: row.created_at,
@@ -36,63 +37,68 @@ const Produto = {
     descricao = '',
     material,
     preco = 0,
+    imagem = 'images/produtos/chapa_lisa.jpg',
     disponivel = true,
     categoria = 'metal'
   }) {
     await ready;
 
     const info = run(
-      `INSERT INTO produtos 
-      (nome, descricao, material, preco, disponivel, categoria) 
-      VALUES (?, ?, ?, ?, ?, ?)`,
-      [
-        nome.trim(),
-        descricao.trim(),
-        material.trim(),
-        Number(preco),
-        disponivel ? 1 : 0,
-        categoria
-      ]
-    );
+  `INSERT INTO produtos 
+  (nome, descricao, material, preco, imagem, disponivel, categoria) 
+  VALUES (?, ?, ?, ?, ?, ?, ?)`,
+  [
+    nome.trim(),
+    descricao.trim(),
+    material.trim(),
+    Number(preco),
+    imagem,
+    disponivel ? 1 : 0,
+    categoria
+  ]
+);
 
     return this.findById(info.lastInsertRowid);
   },
 
   async update(id, {
-    nome,
-    descricao,
-    material,
-    preco,
-    disponivel,
-    categoria
-  }) {
+  nome,
+  descricao,
+  material,
+  preco,
+  imagem,
+  disponivel,
+  categoria
+}) {
     await ready;
 
     const atual = get('SELECT * FROM produtos WHERE id = ?', [id]);
     if (!atual) return null;
 
     run(
-      `UPDATE produtos SET
-        nome = ?,
-        descricao = ?,
-        material = ?,
-        preco = ?,
-        disponivel = ?,
-        categoria = ?,
-        updated_at = datetime('now')
-      WHERE id = ?`,
-      [
-        nome ?? atual.nome,
-        descricao ?? atual.descricao,
-        material ?? atual.material,
-        preco ?? atual.preco,
-        disponivel === undefined
-          ? atual.disponivel
-          : disponivel ? 1 : 0,
-        categoria ?? atual.categoria,
-        id
-      ]
-    );
+  `UPDATE produtos SET
+    nome = ?,
+    descricao = ?,
+    material = ?,
+    preco = ?,
+    imagem = ?,
+    disponivel = ?,
+    categoria = ?,
+    updated_at = datetime('now')
+  WHERE id = ?`,
+  [
+    nome ?? atual.nome,
+    descricao ?? atual.descricao,
+    material ?? atual.material,
+    preco ?? atual.preco,
+    imagem ?? atual.imagem,
+    disponivel === undefined
+      ? atual.disponivel
+      : disponivel ? 1 : 0,
+    categoria ?? atual.categoria,
+    id
+  ]
+);
 
     return this.findById(id);
   },

@@ -13,7 +13,7 @@ function formatarUsuario(row) {
     id:        row.id,
     nome:      row.nome,
     email:     row.email,
-    perfil:    row.perfil, // Ex: 'Admin', 'Atendente', 'Garçom'
+    perfil:    row.perfil, // Ex: 'Admin', 'Atendente'
     ativo:     row.ativo === 1, // Converte 1 para true e 0 para false
     createdAt: row.created_at,
     updatedAt: row.updated_at,

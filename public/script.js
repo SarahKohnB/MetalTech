@@ -154,7 +154,6 @@ ir('dashboard', document.querySelector('[onclick*="dashboard"]'));
 }
 
 function ir(pg, btn) {
-
   const perfil = document.getElementById('sb-perfil').textContent;
 
   if (pg === 'usuarios' && perfil !== 'Administrador') {
@@ -187,6 +186,7 @@ function ir(pg, btn) {
 async function carregarDashboard() {
   const h = new Date().getHours();
   const s = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+
   document.getElementById('dash-sub').textContent = `${s}! Aqui está o resumo.`;
 
   try {
@@ -196,69 +196,145 @@ async function carregarDashboard() {
       api('GET', '/pedidos'),
     ]);
 
-    cProdutos   = produtos;
+    cProdutos = produtos;
     cClientes = clientes;
+
+    const pedidosNaoCancelados = pedidos.filter(p => p.status !== 'cancelado');
+
+    const faturamento = pedidosNaoCancelados
+      .reduce((acc, p) => acc + (Number(p.total) || 0), 0);
+
+    const pedidosAtivos = pedidos.filter(p =>
+      !['entregue', 'cancelado'].includes(p.status)
+    ).length;
 
     document.getElementById('s-piz').textContent = produtos.length;
     document.getElementById('s-cli').textContent = clientes.length;
     document.getElementById('s-ped').textContent = pedidos.length;
-    document.getElementById('s-ent').textContent =
-      pedidos.filter(p => p.status === 'saiu_entrega').length;
-    document.getElementById('s-fat').textContent =
-      R$(pedidos.reduce((acc, p) => acc + (p.total || 0), 0));
-
-    const pend = pedidos.filter(p => !['entregue','cancelado'].includes(p.status)).length;
-    document.getElementById('s-ped-sub').textContent = `${pend} pendente(s)`;
+    document.getElementById('s-ent').textContent = pedidosAtivos;
+    document.getElementById('s-fat').textContent = R$(faturamento);
+    document.getElementById('s-ped-sub').textContent = `${pedidosAtivos} pendente(s)`;
 
     const elP = document.getElementById('dash-pedidos');
+
     elP.innerHTML = pedidos.slice(0, 8).map(p => `
       <div class="mini-row">
         <div>
-          <div class="mn">#${String(p.numeroPedido || '?').padStart(3,'0')} · ${p.cliente?.nome || '—'}</div>
-          <div class="mc">${new Date(p.createdAt).toLocaleString('pt-BR')}</div>
+          <div class="mn">
+            #${String(p.numeroPedido || '?').padStart(3, '0')} · ${p.cliente?.nome || '—'}
+          </div>
+          <div class="mc">
+            ${new Date(p.createdAt).toLocaleString('pt-BR')}
+          </div>
         </div>
+
         <div style="text-align:right">
           ${badge(p.status)}<br>
-          <small style="color:var(--muted)">${R$(p.total)}</small>
+          <small style="color:var(--muted)">
+            ${p.status === 'cancelado' ? 'Não contabilizado' : R$(p.total)}
+          </small>
         </div>
-      </div>`).join('') ||
-      '<div class="empty"><span class="ei">📋</span>Nenhum pedido registrado</div>';
+      </div>
+    `).join('') || '<div class="empty"><span class="ei">📋</span>Nenhum pedido registrado</div>';
 
     const elC = document.getElementById('dash-catalogo');
-    elC.innerHTML = produtos.filter(p => p.disponivel).slice(0, 8).map(p => `
-      <div class="mini-row">
-        <span>🔩 ${p.nome}</span>
-        <small style="color:var(--muted)">${R$(p.preco)}</small>
-      </div>`).join('') ||
-      '<div class="empty"><span class="ei">⛓️‍💥</span>Nenhum produto</div>';
 
-  } catch (e) { toast('Erro dashboard: ' + e.message, 'err'); }
+    elC.innerHTML = produtos
+      .filter(p => p.disponivel)
+      .slice(0, 8)
+      .map(p => `
+        <div class="mini-row">
+          <div style="display:flex;align-items:center;gap:10px">
+            <img
+              src="${p.imagem || 'images/produtos/chapa_lisa.jpg'}"
+              style="width:46px;height:46px;object-fit:cover;border-radius:12px;border:2px solid #f6bd16"
+              onerror="this.src='images/produtos/chapa_lisa.jpg'"
+            >
+
+            <div>
+              <strong>${p.nome}</strong><br>
+              <small style="color:var(--muted)">
+                ${p.material || 'Material industrial'}
+              </small>
+            </div>
+          </div>
+
+          <small style="color:var(--muted)">
+            ${R$(p.preco)}
+          </small>
+        </div>
+      `).join('') || '<div class="empty"><span class="ei">⛓️‍💥</span>Nenhum produto</div>';
+
+  } catch (e) {
+    toast('Erro dashboard: ' + e.message, 'err');
+  }
 }
 
 async function carregarProdutos() {
   const el = document.getElementById('tbl-produtos');
   el.innerHTML = '<div class="spin-wrap"><div class="spin"></div> Carregando...</div>';
+
   try {
     cProdutos = await api('GET', '/produtos');
+
     if (!cProdutos.length) {
       el.innerHTML = '<div class="empty"><span class="ei">⛓️‍💥</span>Nenhum produto</div>';
       return;
     }
+
     el.innerHTML = `
       <table>
         <thead>
-          <tr><th>Nome</th><th>Categoria</th><th>Material</th><th>Preço</th><th>Status</th><th>Ações</th></tr>
+          <tr>
+            <th>Produto</th>
+            <th>Categoria</th>
+            <th>Material</th>
+            <th>Preço</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
         </thead>
+
         <tbody>
           ${cProdutos.map(p => `
             <tr>
-              <td><strong>${p.nome}</strong><br><small style="color:var(--muted)">${p.descricao || ''}</small></td>
-              <td><span class="badge b-cat">${p.categoria || 'tradicional'}</span></td>
-              <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.material}</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <img 
+                    src="${p.imagem || 'images/produtos/chapa_lisa.jpg'}"
+                    style="width:58px;height:58px;object-fit:cover;border-radius:14px;border:2px solid #f6bd16"
+                    onerror="this.src='images/produtos/chapa_lisa.jpg'"
+                  >
+
+                  <div>
+                    <strong>${p.nome}</strong><br>
+                    <small style="color:var(--muted)">${p.descricao || ''}</small>
+                  </div>
+                </div>
+              </td>
+
+              <td><span class="badge b-cat">${p.categoria || 'metal'}</span></td>
+
+              <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                ${p.material}
+              </td>
+
               <td><strong style="color:var(--gold)">${R$(p.preco)}</strong></td>
-              <td><span class="badge ${p.disponivel ? 'b-on' : 'b-off'}">${p.disponivel ? '✅ Disponível' : '❌ Off'}</span></td>
-              <td><div style="display:flex;gap:5px"><button class="btn btn-ghost btn-sm" onclick="editarProduto('${p._id}')">✏️</button><button class="btn btn-danger btn-sm" onclick="deletarProduto('${p._id}','${p.nome}')">🗑️</button></div></td>
-             </tr>`).join('')}
+
+              <td>
+                <span class="badge ${p.disponivel ? 'b-on' : 'b-off'}">
+                  ${p.disponivel ? '✅ Disponível' : '❌ Off'}
+                </span>
+              </td>
+
+              <td>
+                <div style="display:flex;gap:5px">
+                  <button class="btn btn-ghost btn-sm" onclick="editarProduto('${p._id}')">✏️</button>
+                  <button class="btn btn-danger btn-sm" onclick="deletarProduto('${p._id}','${p.nome}')">🗑️</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
         </tbody>
       </table>`;
   } catch (e) {
@@ -269,13 +345,14 @@ async function carregarProdutos() {
 function abrirProduto() {
   document.getElementById('m-produto-t').textContent = 'Novo Produto';
 
-  ['p-id', 'p-nome', 'p-material', 'p-desc', 'p-preco'].forEach(id => {
+  ['p-id', 'p-nome', 'p-material', 'p-desc', 'p-preco', 'p-img'].forEach(id => {
     const campo = document.getElementById(id);
     if (campo) campo.value = '';
   });
 
-  document.getElementById('p-cat').value = 'metal';
+  document.getElementById('p-cat').value = 'Chapas';
   document.getElementById('p-disp').value = 'true';
+  document.getElementById('p-img').value = 'images/produtos/chapa_lisa.jpg';
 
   abrir('m-produto');
 }
@@ -291,6 +368,7 @@ function editarProduto(id) {
   document.getElementById('p-material').value = p.material || '';
   document.getElementById('p-desc').value = p.descricao || '';
   document.getElementById('p-preco').value = p.preco || '';
+  document.getElementById('p-img').value = p.imagem || 'images/produtos/chapa_lisa.jpg';
   document.getElementById('p-cat').value = p.categoria || 'metal';
   document.getElementById('p-disp').value = String(p.disponivel);
 
@@ -312,6 +390,7 @@ async function salvarProduto() {
     material: material,
     descricao: document.getElementById('p-desc').value.trim(),
     preco: parseFloat(document.getElementById('p-preco').value) || 0,
+    imagem: document.getElementById('p-img').value,
     categoria: document.getElementById('p-cat').value,
     disponivel: document.getElementById('p-disp').value === 'true',
   };
@@ -441,11 +520,26 @@ async function deletarCliente(id, nome) {
 
 async function carregarPedidos() {
   const el = document.getElementById('tbl-pedidos');
-  el.innerHTML = '<div class="spin-wrap"><div class="spin"></div> Carregando...</div>';
+
+  el.innerHTML =
+    '<div class="spin-wrap"><div class="spin"></div> Carregando...</div>';
+
   try {
+
     const pedidos = await api('GET', '/pedidos');
-    if (!pedidos.length) {
-      el.innerHTML = '<div class="empty"><span class="ei">📋</span>Nenhum pedido</div>';
+
+    const filtro =
+      document.getElementById('filtro-status')?.value || '';
+
+    let lista = pedidos;
+
+    if (filtro) {
+      lista = pedidos.filter(p => p.status === filtro);
+    }
+
+    if (!lista.length) {
+      el.innerHTML =
+        '<div class="empty"><span class="ei">📋</span>Nenhum pedido</div>';
       return;
     }
     el.innerHTML = `
@@ -454,7 +548,7 @@ async function carregarPedidos() {
           <tr><th>#</th><th>Cliente</th><th>Itens</th><th>Subtotal</th><th>Entrega</th><th>Total</th><th>Pagamento</th><th>Status</th><th>Data</th><th>Ações</th>
         </thead>
         <tbody>
-          ${pedidos.map(p => `
+          ${lista.map(p => `
             <tr>
               <td><strong style="color:var(--red)">#${String(p.numeroPedido||'?').padStart(3,'0')}</strong></td>
               <td><strong>${p.cliente?.nome || '—'}</strong><br><small style="color:var(--muted)">${p.cliente?.telefone || ''}</small></td>
@@ -475,18 +569,21 @@ async function carregarPedidos() {
 
 async function abrirPedido() {
   try {
-    if (!cProdutos.length)   cProdutos   = await api('GET', '/produtos');
-    if (!cClientes.length) cClientes = await api('GET', '/clientes');
-  } catch (e) { toast('Erro ao carregar dados', 'err'); return; }
+    cProdutos = await api('GET', '/produtos');
+    cClientes = await api('GET', '/clientes');
+  } catch (e) {
+    toast('Erro ao carregar dados', 'err');
+    return;
+  }
 
   document.getElementById('ped-cli').innerHTML =
     '<option value="">— Selecione o cliente —</option>' +
     cClientes.map(c => `<option value="${c._id}">${c.nome} · ${c.telefone}</option>`).join('');
 
   document.getElementById('itens-lista').innerHTML = '';
-  document.getElementById('ped-taxa').value  = '0';
-  document.getElementById('ped-obs').value   = '';
-  document.getElementById('ped-pag').value   = 'pix';
+  document.getElementById('ped-taxa').value = '0';
+  document.getElementById('ped-obs').value = '';
+  document.getElementById('ped-pag').value = 'pix';
   document.getElementById('ped-sub').textContent = 'R$ 0,00';
   document.getElementById('ped-tot').textContent = 'R$ 0,00';
   document.getElementById('wrap-troco').style.display = 'none';
@@ -498,16 +595,23 @@ async function abrirPedido() {
 function addItem() {
   const d = document.createElement('div');
   d.className = 'item-row';
+
   const opts = cProdutos
-    .filter(p => p.disponivel)
-    .map(p => `<option value="${p._id}" data-preco="${p.preco || 0}">${p.nome}</option>`).join('');
+    .map(p => `<option value="${p._id}" data-preco="${p.preco || 0}">${p.nome}</option>`)
+    .join('');
 
   d.innerHTML = `
-    <select class="ip" onchange="recalc()"><option value="">Selecione...</option>${opts}</select>
-    <input class="it" value="Unidade" oninput="recalc()">
+    <select class="ip" onchange="recalc()">
+      <option value="">Selecione...</option>
+      ${opts}
+    </select>
+
     <input class="iq" type="number" value="1" min="1" oninput="recalc()">
+
     <div class="is" style="font-size:.8rem;text-align:right;color:var(--muted)">R$ 0,00</div>
-    <button class="btn-rm" onclick="this.parentElement.remove(); recalc()">×</button>`;
+
+    <button class="btn-rm" onclick="this.parentElement.remove(); recalc()">×</button>
+  `;
 
   document.getElementById('itens-lista').appendChild(d);
 }
@@ -545,10 +649,10 @@ async function salvarPedido() {
     const pid = row.querySelector('.ip').value;
     if (!pid) { valido = false; return; }
     itens.push({
-      produto:      pid,
-      medida: row.querySelector('.it').value,
-      quantidade: parseInt(row.querySelector('.iq').value) || 1,
-    });
+  produto: pid,
+  medida: 'Unidade',
+  quantidade: parseInt(row.querySelector('.iq').value) || 1,
+});
   });
 
   if (!valido || !itens.length) {
@@ -564,7 +668,7 @@ async function salvarPedido() {
       troco:          parseFloat(document.getElementById('ped-troco')?.value) || 0,
       observacoes:    document.getElementById('ped-obs').value,
     });
-    toast('Pedido criado! 🍕');
+    toast('Pedido criado!');
     fechar('m-pedido');
     carregarPedidos();
   } catch (e) { toast('Erro: ' + e.message, 'err'); }

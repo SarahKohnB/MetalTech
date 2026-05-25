@@ -148,19 +148,49 @@ Track</h1>
       </div>
     </section>
 
-    <section id="pg-pedidos" class="secao">
-      <div class="pg-header">
-        <div><h2>Pedidos</h2><p>Acompanhe e gerencie os pedidos</p></div>
-        <button class="btn btn-red" onclick="abrirPedido()">+ Novo Pedido</button>
-      </div>
-      <div class="pg-body">
-        <div class="card">
-          <div class="card-body tbl-wrap" id="tbl-pedidos">
-            <div class="spin-wrap"><div class="spin"></div> Carregando...</div>
-          </div>
+   <section id="pg-pedidos" class="secao">
+
+  <div class="pg-header">
+    <div>
+      <h2>Pedidos</h2>
+      <p>Acompanhe e gerencie os pedidos</p>
+    </div>
+
+    <button class="btn btn-red" onclick="abrirPedido()">
+      + Novo Pedido
+    </button>
+  </div>
+
+  <!-- FILTRO -->
+  <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+
+    <select id="filtro-status" onchange="carregarPedidos()" style="max-width:240px">
+      <option value="">Filtrar Status</option>
+      <option value="recebido">Recebido</option>
+      <option value="em_preparo">Em Produção</option>
+      <option value="saiu_entrega">Em Transporte</option>
+      <option value="entregue">Entregue</option>
+      <option value="cancelado">Cancelado</option>
+    </select>
+
+  </div>
+
+  <div class="pg-body">
+
+    <div class="card">
+      <div class="card-body tbl-wrap" id="tbl-pedidos">
+
+        <div class="spin-wrap">
+          <div class="spin"></div>
+          Carregando...
         </div>
+
       </div>
-    </section>
+    </div>
+
+  </div>
+
+</section>
 
     <section id="pg-produtos" class="secao">
       <div class="pg-header">
@@ -218,23 +248,34 @@ Track</h1>
     <h3 id="m-produto-t">Novo Produto</h3>
     <input type="hidden" id="p-id">
     <div class="fr2">
-      <div class="fg"><label>Nome *</label><input id="p-nome" placeholder="Ex: Calabresa"></div>
+      <div class="fg"><label>Nome *</label><input id="p-nome" placeholder="Ex: Panela"></div>
       <div class="fg"><label>Categoria</label>
         <select id="p-cat">
-          <option value="tradicional">Tradicional</option>
-          <option value="especial">Especial</option>
-          <option value="premium">Premium</option>
-          <option value="doce">Doce</option>
+          <option value="Perfis">Comum</option>
+          <option value="Premium">Premium</option>
+          <option value="Chapas">Chapas</option>
+          <option value="Tubulações">Tubulações</option>
+          <option value="Estruturas">Estruturas</option>
+          <option value="Panelas">Panelas</option>
+          <option value="Utensílios">Utensílios</option>
         </select>
       </div>
     </div>
-    <div class="fg"><label>Ingredientes *</label><input id="p-material" placeholder="Calabresa, cebola, mussarela..."></div>
+    <div class="fg"><label>Material *</label><input id="p-material" placeholder="Aço, alumínio..."></div>
     <div class="fg"><label>Descrição</label><input id="p-desc" placeholder="Breve descrição..."></div>
     <div class="fr3">
-      <div class="fg"><label>Preço P (R$)</label><input id="p-preco" type="number" step="0.01" min="0" placeholder="35,00"></div>
-      <div class="fg"><label>Preço M (R$)</label><input id="p-preco" type="number" step="0.01" min="0" placeholder="45,00"></div>
-      <div class="fg"><label>Preço G (R$)</label><input id="p-preco" type="number" step="0.01" min="0" placeholder="55,00"></div>
+      <div class="fg"><label>Preço (R$)</label><input id="p-preco" type="number" step="0.01" min="0" placeholder="35,00"></div>
     </div>
+    <div class="fg">
+  <label>Imagem do Produto</label>
+  <select id="p-img">
+    <option value="images/produtos/chapa_lisa.jpg">Chapa Lisa</option>
+    <option value="images/produtos/tubos_inox.jpg">Tubos Inox</option>
+    <option value="images/produtos/barras_aco.jpg">Artefatos de Chapas</option>
+    <option value="images/produtos/panelas.png">Panelas</option>
+    <option value="images/produtos/talher.png">Kit Talher</option>
+  </select>
+</div>
     <div class="fg"><label>Disponível</label>
       <select id="p-disp">
         <option value="true">✅ Sim</option>
@@ -283,9 +324,9 @@ Track</h1>
       <label style="margin-bottom:0;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.3px">Itens do Pedido</label>
       <button class="btn btn-ghost btn-sm" onclick="addItem()">+ Produto</button>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 68px 58px 68px 30px;gap:6px;font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;padding:0 1px">
-      <span>Produto</span><span>Tam.</span><span>Qtd</span><span>Subtotal</span><span></span>
-    </div>
+    <div style="display:grid;grid-template-columns:1fr 70px 90px 38px;gap:8px;font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;padding:0 1px">
+  <span>Produto</span><span>Qtd</span><span>Subtotal</span><span></span>
+</div>
     <div id="itens-lista"></div>
     <div class="total-box">
       <div class="row"><span>Subtotal</span><span id="ped-sub">R$ 0,00</span></div>
@@ -296,7 +337,7 @@ Track</h1>
       <div class="fg"><label>Forma de Pagamento *</label><select id="ped-pag" onchange="toggleTroco()"><option value="pix">PIX</option><option value="cartao_credito">Cartão de Crédito</option><option value="cartao_debito">Cartão de Débito</option><option value="dinheiro">Dinheiro</option></select></div>
       <div class="fg" id="wrap-troco" style="display:none"><label>Troco para (R$)</label><input id="ped-troco" type="number" min="0" step="1" placeholder="Ex: 100"></div>
     </div>
-    <div class="fg"><label>Observações</label><textarea id="ped-obs" rows="2" placeholder="Sem cebola, massa fina..."></textarea></div>
+    <div class="fg"><label>Observações</label><textarea id="ped-obs" rows="2" placeholder="Digite alguma preferência"></textarea></div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="fechar('m-pedido')">Cancelar</button>
       <button class="btn btn-red"   onclick="salvarPedido()">Confirmar Pedido</button>
@@ -311,7 +352,7 @@ Track</h1>
     <div class="fg"><label>Novo Status</label>
       <select id="st-val">
         <option value="recebido">📥 Recebido</option>
-        <option value="em_preparo">👨‍🍳 Em Preparo</option>
+        <option value="em_preparo">🏭 Em Produção</option>
         <option value="saiu_entrega">🛵 Saiu para Entrega</option>
         <option value="entregue">✅ Entregue</option>
         <option value="cancelado">❌ Cancelado</option>
@@ -329,7 +370,7 @@ Track</h1>
     <h3>Novo Usuário</h3>
     <div class="fr2">
       <div class="fg"><label>Nome *</label><input id="u-nome" placeholder="Nome completo"></div>
-      <div class="fg"><label>Perfil</label><select id="u-perfil"><option value="Atendente">Atendente</option><option value="Garcom">Garçom</option><option value="Administrador">Administrador</option></select></div>
+      <div class="fg"><label>Perfil</label><select id="u-perfil"><option value="Atendente">Atendente</option><option value="Administrador">Administrador</option></select></div>
     </div>
     <div class="fg"><label>E-mail *</label><input id="u-email" type="email" placeholder="usuario@metaltech.com"></div>
     <div class="fg"><label>Senha *</label><input id="u-senha" type="password" placeholder="Mínimo 6 caracteres"></div>

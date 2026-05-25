@@ -29,7 +29,7 @@ const routes    = require('./src/routes/index');
 // Só liga o servidor DEPOIS que o banco de dados estiver pronto (ready)
 ready.then(() => {
   
-  // Todas as rotas do sistema agora começam com /api (Ex: /api/pizzas)
+  // Todas as rotas do sistema agora começam com /api (Ex: /api/produtos)
   app.use('/api', routes);
 
   // Rota simples apenas para testar se a API está "viva"

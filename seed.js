@@ -26,17 +26,20 @@ async function seed() {
 
     console.log('✅ Banco limpo');
 
-    // Cria uma senha padrão "123456" criptografada para os usuários iniciais
-    const hash = await bcrypt.hash('123456', 10);
+    // Cria uma senha padrão para os usuarios
+    const senhaAdmin = await bcrypt.hash('admin123', 10);
+    const senhaAtendente = await bcrypt.hash('atendente123', 10);
+    const senhaEstoque = await bcrypt.hash('estoque123', 10);
 
     // --- CRIAÇÃO DE USUÁRIOS (EQUIPE) ---
     run('INSERT INTO usuarios (nome, email, senha, perfil) VALUES (?, ?, ?, ?)',
-      ['Administrador Master', 'admin@metaltech.com', hash, 'Administrador']);
-    run('INSERT INTO usuarios (nome, email, senha, perfil) VALUES (?, ?, ?, ?)',
-      ['Atendente Oficial', 'atendente@metaltech.com', hash, 'Atendente']);
-    run('INSERT INTO usuarios (nome, email, senha, perfil) VALUES (?, ?, ?, ?)',
-      ['Estoque Oficial', 'estoque@metaltech.com', hash, 'Estoque']);
-
+  ['Administrador Master', 'admin@metaltech.com', senhaAdmin, 'Administrador']);
+  
+  run('INSERT INTO usuarios (nome, email, senha, perfil) VALUES (?, ?, ?, ?)',
+  ['Atendente Oficial', 'atendente@metaltech.com', senhaAtendente, 'Atendente']);
+  
+  run('INSERT INTO usuarios (nome, email, senha, perfil) VALUES (?, ?, ?, ?)',
+  ['Estoque Oficial', 'estoque@metaltech.com', senhaEstoque, 'Estoque']);
     console.log('✅ 3 usuários criados');
 
     // --- CRIAÇÃO DE CLIENTES ---
@@ -71,14 +74,17 @@ async function seed() {
     console.log('✅ 20 clientes criados');
 
     // --- CRIAÇÃO DO CATÁLOGO (PRODUTOS) ---
-    // Lista com: Nome, Descrição, Materiais, Preços (P, M, G) e Categoria
-    const produtos = [
+    // Lista com: Nome, Descrição, Materiais, Preços e Categoria
+   // --- CRIAÇÃO DO CATÁLOGO (PRODUTOS) ---
+
+const produtos = [
   {
     nome: 'Chapa de Aço',
     descricao: 'Chapa resistente para estruturas metálicas',
     material: 'Aço carbono',
     preco: 199.90,
-    categoria: 'Estruturas'
+    categoria: 'Estruturas',
+    imagem: 'images/produtos/chapa_lisa.jpg'
   },
 
   {
@@ -86,36 +92,51 @@ async function seed() {
     descricao: 'Tubo metálico galvanizado industrial',
     material: 'Aço galvanizado',
     preco: 89.50,
-    categoria: 'Tubulações'
+    categoria: 'Tubulações',
+    imagem: 'images/produtos/tubos_inox.jpg'
   },
 
   {
-    nome: 'Barra de Alumínio',
-    descricao: 'Barra leve para acabamento industrial',
-    material: 'Alumínio',
-    preco: 59.90,
-    categoria: 'Acabamentos'
+    nome: 'Kit Talher',
+    descricao: '4 garfos, 4 facas, 4 colheres de sopa e 4 colheres de sobremesa de cabo liso',
+    material: 'Aço Inox',
+    preco: 250.90,
+    categoria: 'Utensílios',
+    imagem: 'images/produtos/talher.png'
   },
 
   {
-    nome: 'Perfil Metálico U',
-    descricao: 'Perfil estrutural reforçado',
-    material: 'Aço estrutural',
+    nome: 'Barras de Aço',
+    descricao: 'Peças metálicas feitas com chapas industriais',
+    material: 'Aço',
     preco: 149.90,
-    categoria: 'Perfis'
+    categoria: 'Chapas',
+    imagem: 'images/produtos/barras_aco.jpg'
   }
 ];
 
-    for (const [nome, desc, ing, preco, cat] of pizzas) {
-      run('INSERT INTO produtos (nome, descricao, material, preco, categoria) VALUES (?, ?, ?, ?, ?)',
-        [nome, desc, ing, JSON.stringify(preco), cat]);
-    }
-    console.log('✅ 20 pizzas criadas');
+for (const produto of produtos) {
+
+  run(
+  'INSERT INTO produtos (nome, descricao, material, preco, categoria, imagem) VALUES (?, ?, ?, ?, ?, ?)',
+  [
+    produto.nome,
+    produto.descricao,
+    produto.material,
+    produto.preco,
+    produto.categoria,
+    produto.imagem || 'images/produtos/chapa_lisa.jpg'
+  ]
+);
+
+}
+
+console.log(`✅ ${produtos.length} produtos criados`);
 
     console.log('======================================');
     console.log('🔥 SEED EXECUTADO COM SUCESSO!');
     console.log('======================================');
-    console.log('Login: admin@pizzaria.com | Senha: 123456');
+    console.log('Login: admin@metaltech.com | Senha: 123456');
     console.log('======================================');
     
     process.exit(0); // Finaliza o script com sucesso
