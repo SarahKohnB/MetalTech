@@ -760,3 +760,39 @@ async function deletarUsuario(id, nome) {
     carregarUsuarios();
   } catch (e) { toast('Erro: ' + e.message, 'err'); }
 }
+
+function aplicarTemaSalvo() {
+  const tema = localStorage.getItem('tema') || 'claro';
+
+  if (tema === 'escuro') {
+    document.body.classList.add('tema-escuro');
+    document.getElementById('btn-tema').textContent = '☀️ Modo claro';
+  } else {
+    document.body.classList.remove('tema-escuro');
+    document.getElementById('btn-tema').textContent = '🌙 Modo escuro';
+  }
+}
+
+function trocarTema() {
+  const escuro = document.body.classList.toggle('tema-escuro');
+
+  localStorage.setItem('tema', escuro ? 'escuro' : 'claro');
+
+  document.getElementById('btn-tema').textContent =
+    escuro ? '☀️ Modo claro' : '🌙 Modo escuro';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  aplicarTemaSalvo();
+
+  const email = document.getElementById('l-email');
+  const senha = document.getElementById('l-senha');
+
+  [email, senha].forEach(campo => {
+    campo.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        fazerLogin();
+      }
+    });
+  });
+});
