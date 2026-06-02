@@ -1045,3 +1045,92 @@ td{
     font-size:.9rem;
   }
 }
+.btn-tema{
+  border:none;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  padding:8px 10px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:800;
+  font-size:.75rem;
+}
+
+.btn-tema:hover{
+  background:var(--yellow);
+  color:#111827;
+}
+
+body.tema-escuro{
+  --bg:#111827;
+  --bg2:#0b0f14;
+  --card:#1f2937;
+  --text:#f9fafb;
+  --muted:#d1d5db;
+  --line:#374151;
+
+  background:linear-gradient(135deg,#111827,#0b0f14);
+  color:#f9fafb;
+}
+
+body.tema-escuro #conteudo{
+  background:transparent;
+}
+
+body.tema-escuro .card,
+body.tema-escuro .stat,
+body.tema-escuro .modal{
+  background:#1f2937;
+  color:#f9fafb;
+  border-color:#374151;
+}
+
+body.tema-escuro .pg-header h2,
+body.tema-escuro .card-head h3,
+body.tema-escuro .stat .val,
+body.tema-escuro .modal h3,
+body.tema-escuro td,
+body.tema-escuro strong{
+  color:#f9fafb;
+}
+
+body.tema-escuro .pg-header p,
+body.tema-escuro .stat .lbl,
+body.tema-escuro .stat .sub,
+body.tema-escuro small{
+  color:#d1d5db !important;
+}
+
+body.tema-escuro table{
+  background:#1f2937;
+  color:#f9fafb;
+}
+
+body.tema-escuro thead{
+  background:#111827;
+}
+
+body.tema-escuro tbody tr{
+  border-bottom:1px solid #374151;
+}
+
+body.tema-escuro tbody tr:hover{
+  background:#273244;
+}
+
+body.tema-escuro input,
+body.tema-escuro select,
+body.tema-escuro textarea{
+  background:#111827;
+  color:#f9fafb;
+  border-color:#374151;
+}
+
+body.tema-escuro .total-box{
+  background:#111827;
+  border-color:#374151;
+}
+
+body.tema-escuro .mini-row{
+  border-bottom:1px solid #374151;
+}
