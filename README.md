@@ -222,27 +222,47 @@ Esses produtos aparecem no catálogo e podem ser usados na criação dos pedidos
 
 **TELA DE LOGIN**
 
-![tela login](./docs/images/telalogin.png)
+![tela login](./public/images/telalogin.png)
 
-**TELA INICIAL**
+**TELA INICIAL - MODO CLARO**
 
-![tela inicial](./docs/images/telainicial.png)
+![tela inicial](./public/images/telainicialC.png)
 
-**TELA DOS PEDIDOS**
+**TELA INICIAL - MODO ESCURO**
 
-![tela pedidos](./docs/images/telapedidos.png)
+![tela inicial](./public/images/telainicialE.png)
 
-**TELA DOS PRODUTOS**
+**TELA DOS PEDIDOS - MODO CLARO**
 
-![tela produtos](./docs/images/telaprodutos.png)
+![tela pedidos](./public/images/telapedidosC.png)
 
-**TELA DOS CLIENTES**
+**TELA DOS PEDIDOS - MODO ESCURO**
 
-![tela clientes](./docs/images/telaclientes.png)
+![tela pedidos](./public/images/telapedidosE.png)
 
-**TELA DOS USUÁRIOS**
+**TELA DOS PRODUTOS - MODO CLARO**
 
-![tela usuarios](./docs/images/telausuarios.png)
+![tela produtos](./public/images/telaprodutosC.png)
+
+**TELA DOS PRODUTOS - MODO ESCURO**
+
+![tela produtos](./public/images/telaprodutosE.png)
+
+**TELA DOS CLIENTES - MODO CLARO**
+
+![tela clientes](./public/images/telaclientesC.png)
+
+**TELA DOS CLIENTES - MODO ESCURO**
+
+![tela clientes](./public/images/telaclientesE.png)
+
+**TELA DOS USUÁRIOS - MODO CLARO**
+
+![tela usuarios](./public/images/telausuariosC.png)
+
+**TELA DOS USUÁRIOS - MODO ESCURO**
+
+![tela usuarios](./public/images/telausuariosE.png)
 
 ---
 
