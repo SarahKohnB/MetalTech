@@ -1134,3 +1134,33 @@ body.tema-escuro .total-box{
 body.tema-escuro .mini-row{
   border-bottom:1px solid #374151;
 }
+
+@media(max-width:768px){
+
+  .sb-nav{
+    overflow-x:auto;
+    overflow-y:hidden;
+    white-space:nowrap;
+    scrollbar-width:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .sb-nav::-webkit-scrollbar{
+    height:8px;
+    display:block;
+  }
+
+  .sb-nav::-webkit-scrollbar-track{
+    background:rgba(255,255,255,.12);
+    border-radius:999px;
+  }
+
+  .sb-nav::-webkit-scrollbar-thumb{
+    background:var(--yellow);
+    border-radius:999px;
+  }
+
+  .nav-btn{
+    flex:0 0 auto;
+  }
+}

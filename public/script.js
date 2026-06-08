@@ -71,8 +71,18 @@ function toast(msg, tipo = 'ok') {
   setTimeout(() => el.className = '', 3000);
 }
 
-function abrir(id)  { document.getElementById(id).classList.add('open'); }
-function fechar(id) { document.getElementById(id).classList.remove('open'); }
+function abrir(id) {
+  document.querySelectorAll('.modal-bg')
+    .forEach(m => m.classList.remove('open'));
+
+  document.getElementById(id)
+    .classList.add('open');
+}
+
+function fechar(id) {
+  document.getElementById(id)
+    .classList.remove('open');
+}
 
 document.querySelectorAll('.modal-bg').forEach(bg =>
   bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); })
