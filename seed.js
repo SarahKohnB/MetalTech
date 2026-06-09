@@ -136,7 +136,7 @@ console.log(`✅ ${produtos.length} produtos criados`);
     console.log('======================================');
     console.log('🔥 SEED EXECUTADO COM SUCESSO!');
     console.log('======================================');
-    console.log('Login: admin@metaltech.com | Senha: 123456');
+    console.log('Login: admin@metaltech.com | Senha: admin123');
     console.log('======================================');
     
     process.exit(0); // Finaliza o script com sucesso

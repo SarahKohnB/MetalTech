@@ -92,6 +92,26 @@ router.post('/clientes', auth, async (req, res) => {
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
+router.put('/clientes/:id', auth, async (req, res) => {
+  try {
+    const c = await Cliente.update(req.params.id, req.body);
+    if (!c) return res.status(404).json({ erro: 'Cliente não encontrado' });
+    res.json(c);
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+
+router.delete('/clientes/:id', auth, async (req, res) => {
+  try {
+    const ok = await Cliente.delete(req.params.id);
+    if (!ok) return res.status(404).json({ erro: 'Cliente não encontrado' });
+    res.json({ mensagem: 'Cliente deletado' });
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+
 // --- ROTAS DE PEDIDOS ---
 
 router.get('/pedidos', auth, async (req, res) => {
@@ -162,6 +182,40 @@ router.post('/usuarios', auth, async (req, res) => {
     if (e.message?.includes('UNIQUE')) return res.status(400).json({ erro: 'E-mail já cadastrado' });
     res.status(500).json({ erro: e.message });
   }
+});
+router.put('/usuarios/:id', auth, async (req, res) => {
+  try {
+    if (req.usuario.perfil !== 'Administrador')
+      return res.status(403).json({ erro: 'Acesso restrito a Administradores' });
+
+    const u = await Usuario.update(req.params.id, req.body);
+    if (!u) return res.status(404).json({ erro: 'Usuário não encontrado' });
+
+    res.json(u);
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+
+router.delete('/usuarios/:id', auth, async (req, res) => {
+  try {
+    if (req.usuario.perfil !== 'Administrador')
+      return res.status(403).json({ erro: 'Acesso restrito a Administradores' });
+
+    const ok = await Usuario.delete(req.params.id);
+    if (!ok) return res.status(404).json({ erro: 'Usuário não encontrado' });
+
+    res.json({ mensagem: 'Usuário deletado' });
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+router.get('/', (req, res) => {
+  res.json({
+    sistema: 'FactoryTrack',
+    status: 'online',
+    versao: '2.0'
+  });
 });
 
 module.exports = router;
