@@ -4,7 +4,7 @@ Oii, esse README vai servir de apoio para você que quer fazer esse sistema func
 
 ## 👥 Integrantes
 
-* Fernanda C. Rodrigues Ferreira
+* Fernanda C. R. Ferreira
 
 * Isabelle Queiroz Rodrigues
 
